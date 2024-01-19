@@ -1,0 +1,49 @@
+#user-info,
+#user-avatar {
+  display: block;
+  margin: 20px;
+  border-radius: 50%;
+}
+
+.repository-card {
+  margin-right: 1%;
+  margin-bottom: 0.5%;
+  padding: 1%;
+  display: flex;
+  flex-wrap: wrap;
+  width: 40%;
+}
+
+.repository-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .repository-card {
+    width: 100%;
+  }
+}
+
+#pagination {
+  margin-top: 10px;
+}
+
+.card-text1 {
+  background-color: #007bff;
+  width: fit-content;
+  padding: 5px;
+  color: white;
+  border-radius: 4px;
+}
+
+.card-title {
+  color: #007bff;
+}
+
+.form-control1 {
+  width: 40px;
+}
+
+.form-group1 {
+  margin-left: 80%;
+}

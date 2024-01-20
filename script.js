@@ -1,3 +1,12 @@
+let currentPage = 1;
+let totalRepo = 0;
+let allRepositories = [];
+
+document.getElementById("perPage").addEventListener("change", function () {
+  currentPage = 1;
+  getRepositories();
+});
+
 function getRepositories() {
   const username = document.getElementById("username").value;
   const perPage = document.getElementById("perPage").value;
@@ -8,7 +17,7 @@ function getRepositories() {
   }
 
   const userApiUrl = `https://api.github.com/users/${username}`;
-  const repositoriesApiUrl = `https://api.github.com/users/${username}/repos?per_page=${perPage}`;
+  const repositoriesApiUrl = `https://api.github.com/users/${username}/repos?per_page=${perPage}&page=${currentPage}`;
 
   document.getElementById("loader").classList.remove("d-none");
 
@@ -20,13 +29,19 @@ function getRepositories() {
       return response.json();
     })
     .then((user) => {
+      totalRepo = user.public_repos;
       displayUserInfo(user);
       return fetch(repositoriesApiUrl);
     })
     .then((response) => response.json())
     .then((repositories) => {
       document.getElementById("loader").classList.add("d-none");
+      allRepositories = repositories;
+      if (repositories.length > 0) {
+        document.getElementById("search-container").style.display = "block";
+      }
       displayRepositories(repositories);
+      updatePagination(totalRepo, perPage);
       perPageContainer.classList.remove("d-none");
     })
     .catch((error) => {
@@ -34,6 +49,22 @@ function getRepositories() {
       alert(`Error: ${error.message}`);
       perPageContainer.classList.add("d-none");
     });
+}
+
+function searchRepositories() {
+  const searchInput = document
+    .getElementById("repo-search")
+    .value.toLowerCase();
+
+  const filteredRepositories = allRepositories.filter((repo) =>
+    repo.name.toLowerCase().includes(searchInput)
+  );
+
+  displayRepositories(filteredRepositories);
+  updatePagination(
+    filteredRepositories.length,
+    document.getElementById("perPage").value
+  );
 }
 
 function displayUserInfo(user) {
@@ -61,6 +92,11 @@ function displayUserInfo(user) {
   userNameElement.style.fontWeight = "bold";
 
   userDetailsContainer.appendChild(userNameElement);
+
+  const userURLElement = document.createElement("p");
+  userURLElement.innerHTML = `<a href="${user.html_url}" target="_blank">${user.html_url}</a>`;
+  userURLElement.style.fontSize = "0.6em";
+  userDetailsContainer.appendChild(userURLElement);
 
   if (user.location) {
     const locationElement = document.createElement("p");
@@ -159,6 +195,7 @@ function addPagination(totalRepositories, currentPage, perPage) {
 }
 
 function goToPage(pageNumber) {
+  currentPage = pageNumber;
   const username = document.getElementById("username").value;
   const perPage = document.getElementById("perPage").value;
   const apiUrl = `https://api.github.com/users/${username}/repos?per_page=${perPage}&page=${pageNumber}`;
@@ -171,4 +208,30 @@ function goToPage(pageNumber) {
       displayRepositories(data, pageNumber, perPage);
     })
     .catch((error) => console.error("Error fetching data:", error));
+}
+
+function updatePagination(totalCount, perPage) {
+  const totalPages = Math.ceil(totalCount / perPage);
+  const paginationContainer = document.getElementById("pagination");
+  paginationContainer.innerHTML = "";
+
+  for (let i = 1; i <= totalPages; i++) {
+    const li = document.createElement("li");
+    li.classList.add("page-item");
+    if (i === currentPage) {
+      li.classList.add("active");
+    }
+
+    const a = document.createElement("a");
+    a.classList.add("page-link");
+    a.href = "#";
+    a.innerText = i;
+    a.onclick = function () {
+      currentPage = i;
+      getRepositories();
+    };
+
+    li.appendChild(a);
+    paginationContainer.appendChild(li);
+  }
 }

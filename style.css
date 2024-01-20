@@ -26,6 +26,17 @@
 
 #pagination {
   margin-top: 10px;
+  margin-bottom: 10px;
+  text-decoration-color: #007bff;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  color: white;
+}
+
+#search-container {
+  display: none;
 }
 
 .card-text1 {
@@ -42,6 +53,10 @@
 
 .form-control1 {
   width: 50px;
+  height: 30px;
+  border-radius: 2px;
+  color: #007bff;
+  border: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-group1 {

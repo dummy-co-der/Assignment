@@ -37,63 +37,59 @@ function getRepositories() {
 }
 
 function displayUserInfo(user) {
-    const userInfoElement = document.getElementById("user-info");
-    const userAvatarElement = document.getElementById("user-avatar");
-  
-    const userInfoContainer = document.createElement("div");
-  
-    if (window.innerWidth <= 768) {
-      userInfoContainer.className = "d-flex flex-column align-items-center justify-content-center";
-    } else {
-      userInfoContainer.className = "d-flex align-items-center";
-    }
-  
-    const avatarContainer = document.createElement("div");
-    avatarContainer.style.marginRight = "20px";
-    avatarContainer.style.marginLeft = "30px";
-  
-    userAvatarElement.src = user.avatar_url;
-    avatarContainer.appendChild(userAvatarElement);
-  
-    const userDetailsContainer = document.createElement("div");
-  
-    const userNameElement = document.createElement("p");
-    userNameElement.textContent = `${user.login}`;
-    userNameElement.style.fontWeight = "bold";
-  
-    userDetailsContainer.appendChild(userNameElement);
-  
-    if (user.location) {
-      const locationElement = document.createElement("p");
-      locationElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${user.location}`;
-      locationElement.style.fontSize = "0.6em";
-      userDetailsContainer.appendChild(locationElement);
-    }
-  
-    const bioElement = document.createElement("p");
-    bioElement.textContent = `${user.bio || ""}`;
-    bioElement.style.fontSize = "0.6em";
-  
-    userDetailsContainer.appendChild(bioElement);
-  
-    userInfoContainer.appendChild(avatarContainer);
-    userInfoContainer.appendChild(userDetailsContainer);
-  
-    userInfoElement.innerHTML = "";
-    userInfoElement.appendChild(userInfoContainer);
-  
-    userInfoElement.classList.remove("d-none");
-    userAvatarElement.classList.remove("d-none");
+  const userInfoElement = document.getElementById("user-info");
+  const userAvatarElement = document.getElementById("user-avatar");
+
+  const userInfoContainer = document.createElement("div");
+
+  if (window.innerWidth <= 768) {
+    userInfoContainer.className =
+      "d-flex flex-column align-items-center justify-content-center";
+  } else userInfoContainer.className = "d-flex align-items-center";
+
+  const avatarContainer = document.createElement("div");
+  avatarContainer.style.marginRight = "20px";
+  avatarContainer.style.marginLeft = "30px";
+
+  userAvatarElement.src = user.avatar_url;
+  avatarContainer.appendChild(userAvatarElement);
+
+  const userDetailsContainer = document.createElement("div");
+
+  const userNameElement = document.createElement("p");
+  userNameElement.textContent = `${user.login}`;
+  userNameElement.style.fontWeight = "bold";
+
+  userDetailsContainer.appendChild(userNameElement);
+
+  if (user.location) {
+    const locationElement = document.createElement("p");
+    locationElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${user.location}`;
+    locationElement.style.fontSize = "0.6em";
+    userDetailsContainer.appendChild(locationElement);
   }
-  
-  // Event listener for window resize
-  window.addEventListener("resize", () => {
-    displayUserInfo(/* Pass the user data here */);
-  });
-  
-  // Initial call to display user info
-  displayUserInfo(/* Pass the user data here */);
-  
+
+  const bioElement = document.createElement("p");
+  bioElement.textContent = `${user.bio || ""}`;
+  bioElement.style.fontSize = "0.6em";
+
+  userDetailsContainer.appendChild(bioElement);
+
+  userInfoContainer.appendChild(avatarContainer);
+  userInfoContainer.appendChild(userDetailsContainer);
+
+  userInfoElement.innerHTML = "";
+  userInfoElement.appendChild(userInfoContainer);
+
+  userInfoElement.classList.remove("d-none");
+  userAvatarElement.classList.remove("d-none");
+}
+
+window.addEventListener("resize", () => {
+  displayUserInfo();
+});
+
+displayUserInfo();
 
 function displayRepositories(repositories, currentPage) {
   const repositoriesContainer = document.getElementById("repositories");
@@ -159,10 +155,7 @@ function addPagination(totalRepositories, currentPage, perPage) {
     pageButton.addEventListener("click", () => goToPage(i));
     pageButtonsContainer.appendChild(pageButton);
   }
-
   paginationContainer.appendChild(pageButtonsContainer);
-
-  document.getElementById("perPage").value = perPage;
 }
 
 function goToPage(pageNumber) {
